@@ -1,10 +1,11 @@
 from requests import post,get
 from rich.console import Console
-import requests,os,re,uuid
+import requests,os,re,uuid,time,hashlib
 
-
-uid=str(uuid.uuid4())
 console=Console()
+
+uid=str(uuid.uuid1())
+device_id="android-%s" % hashlib.sha256(str(time.time()).encode()).hexdigest()[:16]
 
 
 def header():
@@ -15,7 +16,7 @@ def header():
 ██║██║╚██╗██║╚════██║   ██║   ██╔══██║╚════╝██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║██╔══██╗   ██║   
 ██║██║ ╚████║███████║   ██║   ██║  ██║      ██║  ██║███████╗██║     ╚██████╔╝██║  ██║   ██║   
 ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝      ╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝
-                        By @TweakPY - @vv1ck / vBeta 1.5
+                        By @TweakPY - @vv1ck / vBeta 1.6
 """,style='bold purple4',justify='left')
  
 
@@ -42,7 +43,8 @@ def starter():
     if user=="":console.print("[!] You must write The user");exit()
     pess=input(f"- Password : ")
     if pess=="":console.print("[!] You must write The password");exit()
-    r1=post('https://i.instagram.com/api/v1/accounts/login/',headers={'User-Agent': 'Instagram 114.0.0.38.120 Android (30/3.0; 216dpi; 1080x2340; huawei/google; Nexus 6P; angler; angler; en_US)',"Accept": "*/*","Accept-Encoding": "gzip, deflate","Accept-Language": "en-US","X-IG-Capabilities": "3brTvw==","X-IG-Connection-Type": "WIFI","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",'Host': 'i.instagram.com'},data={'_uuid': uid,'password': pess,'username': user,'device_id': uid,'from_reg': 'false','_csrftoken': 'missing','login_attempt_count': '0'},allow_redirects=True)
+    
+    r1=post('https://i.instagram.com/api/v1/accounts/login/',headers={'User-Agent': 'Instagram 134.0.0.26.12 (iPhone9,2; iOS 10_0_2; en_US; en-US; scale=2.61; 1080x1920) AppleWebKit/420+',"Accept": "*/*","Accept-Encoding": "gzip, deflate","Accept-Language": "en-US","X-IG-Capabilities": "3brTvw==","X-IG-Connection-Type": "WIFI","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",'Host': 'i.instagram.com'},data={'_uuid': uid,'password': pess,'username': user,'device_id': device_id,'from_reg': 'false','_csrftoken': 'missing','login_attempt_count': '0'},allow_redirects=True)
     if 'logged_in_user' in r1.text:
         console.print("- Login Done [bold green]successfully[/bold green] ")
         sessionid=r1.cookies['sessionid']
@@ -54,7 +56,6 @@ def starter():
             adv_search=get(f'https://www.instagram.com/{target}',headers={'Host': 'www.instagram.com','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0','Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8','Accept-Language': 'ar,en-US;q=0.7,en;q=0.3','Accept-Encoding': 'gzip, deflate, br','Connection': 'keep-alive','Cookie': f'csrftoken={csrftoken}','Upgrade-Insecure-Requests': '1','Sec-Fetch-Dest': 'document','Sec-Fetch-Mode': 'navigate','Sec-Fetch-Site': 'none','Sec-Fetch-User': '?1','TE': 'trailers'})
             try:
                 target_id=re.findall('"profile_id":"(.*?)"',adv_search.text)[0]
-                console.print(target_id)
                 Report_Instagram(target_id,sessionid,csrftoken)
             except IndexError:
                 try:
