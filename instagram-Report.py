@@ -15,8 +15,7 @@ def header():
 ██║██║╚██╗██║╚════██║   ██║   ██╔══██║╚════╝██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║██╔══██╗   ██║   
 ██║██║ ╚████║███████║   ██║   ██║  ██║      ██║  ██║███████╗██║     ╚██████╔╝██║  ██║   ██║   
 ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝      ╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝
-
-                        By @TweakPY - @vv1ck / vBeta 1.4
+                        By @TweakPY - @vv1ck / vBeta 1.5
 """,style='bold purple4',justify='left')
  
 
@@ -62,9 +61,14 @@ def starter():
                     target_id=re.findall('"page_id":"profilePage_(.*?)"',adv_search.text)[0]
                     Report_Instagram(target_id,sessionid,csrftoken)
                 except IndexError:
-                    console.print('\n- [bold red]Failed[/bold red] to get target username, Try entering the Target ID manually .\n')
-                    target_id=input('- Enter The Target ID : ')
-                    Report_Instagram(target_id,sessionid,csrftoken)
+                    try:
+                        adv_search2=get(f'https://www.instagram.com/api/v1/users/web_profile_info/?username={target}',headers={'Host': 'www.instagram.com','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0','Accept': '*/*','Accept-Language': 'ar,en-US;q=0.7,en;q=0.3','Accept-Encoding': 'gzip, deflate, br','X-CSRFToken': csrftoken,'X-IG-App-ID': '936619743392459','X-ASBD-ID': '198387','X-IG-WWW-Claim': 'hmac.AR3KPEPoXkWYhwtoCUKyUHK80GsE1g2PJI1uPtDlCyo4PHKn','X-Requested-With': 'XMLHttpRequest','Alt-Used': 'www.instagram.com','Connection': 'keep-alive','Referer': f'https://www.instagram.com/{target}/','Cookie':  f'sessionid={sessionid}','Sec-Fetch-Dest': 'empty','Sec-Fetch-Mode': 'cors','Sec-Fetch-Site': 'same-origin','TE': 'trailers'})
+                        target_id=adv_search2.json()['data']['user']['id']
+                        Report_Instagram(target_id,sessionid,csrftoken)
+                    except KeyError:
+                        console.print('\n- [bold red]Failed[/bold red] to get target username, Try entering the Target ID manually .\n')
+                        target_id=input('- Enter The Target ID : ')
+                        Report_Instagram(target_id,sessionid,csrftoken)
         elif '"spam":true' in r2.text:
             console.print("- Try again Later !");exit()
         else:
