@@ -1,6 +1,5 @@
 # instagram-Report
 
 
-vBeta 1.5 / 1.6
+instagram-Report / v2
 
-Not fully Tested
